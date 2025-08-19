@@ -31,7 +31,9 @@ This document provides an overview of the development workflow and architecture 
 │   │   ├── CalendarComponent.tsx
 │   │   └── ChartComponent.tsx
 │   ├── config
-│   │   └── interactionConfig.ts
+│   │   ├── interactionConfig.ts
+│   │   ├── pageConfig.json
+│   │   └── types.ts
 │   ├── engine
 │   │   └── actionEngine.ts
 │   ├── atoms.ts
@@ -52,7 +54,7 @@ graph TD
         B[Button]\nComponent
         C[Chart]\nComponent
     end
-    A -- updates value --> S[(Jotai Store)]
+    A -- updates value --> S[(Recoil Store)]
     B -- onClick --> AE(Action Engine)
     AE -- reads --> CFG[interactionConfig]
     AE -- invokes --> C
@@ -75,6 +77,39 @@ sequenceDiagram
     H-->>E: update state
 ```
 
+## Dynamic Page Configuration
+
+The dashboard is assembled from `pageConfig.json`, which declares components and their bindings.
+
+```json
+{
+  "components": [
+    { "id": "calendar-1", "type": "calendar" },
+    {
+      "id": "button-1",
+      "type": "button",
+      "props": { "label": "Load Chart 2" }
+    },
+    { "id": "chart-1", "type": "chart" },
+    { "id": "chart-2", "type": "chart" }
+  ],
+  "bindings": [
+    { "source": "calendar-1", "target": "chart-1", "mode": "direct" },
+    {
+      "source": "calendar-1",
+      "target": "chart-2",
+      "mode": "indirect",
+      "via": "button-1"
+    }
+  ]
+}
+```
+
+- **components** lists widgets to render along with optional props.
+- **bindings** connect component values. `mode: "direct"` updates the target whenever the source changes. `mode: "indirect"` delays the update until the specified component (such as a button) fires its trigger.
+
+The interaction rules consumed by the action engine are derived from this configuration, so editing the JSON payload is enough to rewire the dashboard.
+
 ## Adding a New Component
 
 1. **Create the component** inside `src/components` and expose an `id` prop.
@@ -84,12 +119,12 @@ sequenceDiagram
      registerActionHandler(id, 'actionName', handlerFn);
    }, [id]);
    ```
-3. **Update configuration**: Add corresponding rules to `interactionConfig.ts`.
+3. **Update configuration**: Add corresponding rules to `pageConfig.json`.
 
 ## Styling and Dependencies
 
 - Styling is handled via simple inline styles; feel free to integrate a CSS framework.
-- State management uses [Jotai](https://jotai.org/).
+- State management uses [Recoil](https://recoiljs.org/).
 - Charts are rendered with [ECharts](https://echarts.apache.org/).
 
 ## Contributing
@@ -98,4 +133,3 @@ sequenceDiagram
 2. Commit with meaningful messages.
 3. Ensure the development server and tests run without errors.
 4. Submit a pull request for review.
-

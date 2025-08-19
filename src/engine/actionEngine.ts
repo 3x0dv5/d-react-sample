@@ -1,5 +1,5 @@
-import { getDefaultStore } from 'jotai/vanilla';
-import { componentValuesAtom } from '../atoms';
+import { snapshot_UNSTABLE } from 'recoil';
+import { componentValuesState } from '../atoms';
 
 export type Action = {
   type: string;
@@ -12,14 +12,12 @@ export type Rule = {
   actions: Action[];
 };
 
-const store = getDefaultStore();
-
 const handlers: Record<string, Record<string, (args: any) => void>> = {};
 
 export const registerActionHandler = (
   id: string,
   actionType: string,
-  handler: (args: any) => void
+  handler: (args: any) => void,
 ) => {
   if (!handlers[id]) handlers[id] = {};
   handlers[id][actionType] = handler;
@@ -46,7 +44,9 @@ const evaluateArgs = (args: Record<string, any>) => {
     if (typeof value === 'string') {
       result[key] = value.replace(/\$\{([^}]+)\}/g, (_match, exp) => {
         const [id] = exp.split('.');
-        const values = store.get(componentValuesAtom);
+        const values =
+          snapshot_UNSTABLE().getLoadable(componentValuesState).valueMaybe() ||
+          {};
         return values[id];
       });
     } else {

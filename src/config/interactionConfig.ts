@@ -1,16 +1,16 @@
+import pageConfig from './pageConfig.json';
 import { Rule } from '../engine/actionEngine';
+import { PageConfig } from './types';
 
-export const interactionConfig: Rule[] = [
-  {
-    trigger: 'button-1.onClick',
-    actions: [
-      {
-        type: 'updateChartData',
-        target: 'chart-1',
-        args: {
-          date: '${calendar-1.value}'
-        }
-      }
-    ]
-  }
-];
+const cfg = pageConfig as PageConfig;
+
+export const interactionConfig: Rule[] = cfg.bindings.map((b) => ({
+  trigger: b.mode === 'direct' ? `${b.source}.onChange` : `${b.via}.onClick`,
+  actions: [
+    {
+      type: 'setValue',
+      target: b.target,
+      args: { value: `\${${b.source}.value}` },
+    },
+  ],
+}));
