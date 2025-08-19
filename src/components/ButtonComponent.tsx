@@ -1,6 +1,6 @@
 import React from 'react';
-import { useAtom } from 'jotai';
-import { createComponentAtom } from '../atoms';
+import { useSetRecoilState } from 'recoil';
+import { componentStateFamily } from '../atoms';
 import { executeTrigger } from '../engine/actionEngine';
 import { interactionConfig } from '../config/interactionConfig';
 
@@ -10,7 +10,7 @@ interface Props {
 }
 
 const ButtonComponent: React.FC<Props> = ({ id, label }) => {
-  const [, setValue] = useAtom(createComponentAtom(id));
+  const setValue = useSetRecoilState(componentStateFamily(id));
   const handleClick = () => {
     setValue(new Date().toISOString());
     executeTrigger(`${id}.onClick`, interactionConfig);

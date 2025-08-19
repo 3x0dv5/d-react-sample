@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ReactECharts from 'echarts-for-react';
-import { useAtom } from 'jotai';
-import { createComponentAtom } from '../atoms';
+import { useRecoilState } from 'recoil';
+import { componentStateFamily } from '../atoms';
 import { registerActionHandler } from '../engine/actionEngine';
 
 interface Props {
@@ -14,23 +14,26 @@ interface DataItem {
 }
 
 const ChartComponent: React.FC<Props> = ({ id }) => {
-  const [, setValue] = useAtom(createComponentAtom(id));
+  const [date, setDate] = useRecoilState(componentStateFamily(id));
   const [data, setData] = useState<DataItem[]>([]);
 
-  const updateChartData = async ({ date }: { date: string }) => {
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    const newData = [
-      { name: 'A', value: Math.random() * 100 },
-      { name: 'B', value: Math.random() * 100 },
-      { name: 'C', value: Math.random() * 100 },
-    ];
-    setData(newData);
-    setValue(newData);
-  };
+  useEffect(() => {
+    registerActionHandler(id, 'setValue', ({ value }) => setDate(value));
+  }, [id]);
 
   useEffect(() => {
-    registerActionHandler(id, 'updateChartData', updateChartData);
-  }, [id]);
+    if (date) {
+      (async () => {
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        const newData = [
+          { name: 'A', value: Math.random() * 100 },
+          { name: 'B', value: Math.random() * 100 },
+          { name: 'C', value: Math.random() * 100 },
+        ];
+        setData(newData);
+      })();
+    }
+  }, [date]);
 
   const option = {
     xAxis: { type: 'category', data: data.map((d) => d.name) },
@@ -38,7 +41,9 @@ const ChartComponent: React.FC<Props> = ({ id }) => {
     series: [{ data: data.map((d) => d.value), type: 'bar' }],
   };
 
-  return <ReactECharts option={option} style={{ height: 300, margin: '0.5rem' }} />;
+  return (
+    <ReactECharts option={option} style={{ height: 300, margin: '0.5rem' }} />
+  );
 };
 
 export default ChartComponent;

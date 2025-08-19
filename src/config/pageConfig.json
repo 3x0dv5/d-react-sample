@@ -1,0 +1,21 @@
+{
+  "components": [
+    { "id": "calendar-1", "type": "calendar" },
+    {
+      "id": "button-1",
+      "type": "button",
+      "props": { "label": "Load Chart 2" }
+    },
+    { "id": "chart-1", "type": "chart" },
+    { "id": "chart-2", "type": "chart" }
+  ],
+  "bindings": [
+    { "source": "calendar-1", "target": "chart-1", "mode": "direct" },
+    {
+      "source": "calendar-1",
+      "target": "chart-2",
+      "mode": "indirect",
+      "via": "button-1"
+    }
+  ]
+}
