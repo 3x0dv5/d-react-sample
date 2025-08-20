@@ -7,7 +7,46 @@
       "props": { "label": "Load Chart 2" }
     },
     { "id": "chart-1", "type": "chart" },
-    { "id": "chart-2", "type": "chart" }
+    { "id": "chart-2", "type": "chart" },
+    {
+      "id": "dropdown-1",
+      "type": "dropdown",
+      "props": {
+        "placeholder": "Select an option",
+        "options": [
+          { "label": "Apple", "value": "apple" },
+          { "label": "Banana", "value": "banana" },
+          { "label": "Cherry", "value": "cherry" }
+        ]
+      }
+    },
+    {
+      "id": "textbox-1",
+      "type": "textbox",
+      "props": { "placeholder": "Will mirror dropdown selection" }
+    },
+    {
+      "id": "dropdown-2",
+      "type": "dropdown",
+      "props": {
+        "placeholder": "Select another option",
+        "options": [
+          { "label": "Orange", "value": "orange" },
+          { "label": "Grape", "value": "grape" },
+          { "label": "Strawberry", "value": "strawberry" }
+        ]
+      }
+    },
+    {
+      "id": "textbox-2",
+      "type": "textbox",
+      "props": { "placeholder": "Will mirror dropdown-2 after button click" }
+    },
+    {
+      "id": "button-2",
+      "type": "button",
+      "props": { "label": "Update Textbox 2" }
+    }
   ],
   "bindings": [
     { "source": "calendar-1", "target": "chart-1", "mode": "direct" },
@@ -16,6 +55,9 @@
       "target": "chart-2",
       "mode": "indirect",
       "via": "button-1"
-    }
+    },
+    { "source": "dropdown-1", "source-property": "selected_value", "target": "textbox-1", "target-property": "text", "mode": "direct" },
+    { "source": "dropdown-2", "source-property": "selected_text", "target": "textbox-2", "target-property": "text", "mode": "indirect", "via": "button-2" }
+
   ]
 }
