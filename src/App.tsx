@@ -12,6 +12,7 @@ import DropdownComponent from './components/DropdownComponent';
 import TextboxComponent from './components/TextboxComponent';
 import pageConfig from './config/pageConfig.json';
 import { ComponentConfig, ComponentType, PageConfig } from './config/types';
+import ConfigEditor from './ConfigEditor';
 
 // Cast the imported JSON to the PageConfig TS type for better type safety
 const cfg = pageConfig as PageConfig;
@@ -26,6 +27,9 @@ const componentMap: Record<ComponentType, React.FC<any>> = {
 };
 
 const App: React.FC = () => {
+  if (typeof window !== 'undefined' && window.location.pathname === '/editor') {
+    return <ConfigEditor />;
+  }
   return (
     <div>
       {/* Render all components declared in the configuration */}
