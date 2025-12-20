@@ -21,20 +21,25 @@ const ButtonComponent: React.FC<Props> = ({ id, label }) => {
   // On click, act as trigger for the action engine
   const handleClick = () => {
     // Find rules that this button triggers and collect source component values
-    const matchingRules = interactionConfig.filter(rule => rule.trigger === `${id}.onClick`);
+    const matchingRules = interactionConfig.filter(
+      (rule) => rule.trigger === `${id}.onClick`,
+    );
     const triggerContext: Record<string, any> = {};
-    
+
     // For each rule, extract source component IDs from the action args
-    matchingRules.forEach(rule => {
-      rule.actions.forEach(action => {
+    matchingRules.forEach((rule) => {
+      rule.actions.forEach((action) => {
         if (action.args) {
-          Object.values(action.args).forEach(arg => {
+          Object.values(action.args).forEach((arg) => {
             if (typeof arg === 'string' && arg.includes('${')) {
               // Extract component IDs from expressions like ${dropdown-2.selected_value}
               const matches = arg.matchAll(/\$\{([^.}]+)(?:\.([^}]+))?\}/g);
               for (const match of matches) {
                 const sourceId = match[1];
-                if (sourceId !== id && componentValues[sourceId] !== undefined) {
+                if (
+                  sourceId !== id &&
+                  componentValues[sourceId] !== undefined
+                ) {
                   triggerContext[sourceId] = componentValues[sourceId];
                 }
               }
@@ -49,7 +54,11 @@ const ButtonComponent: React.FC<Props> = ({ id, label }) => {
   };
 
   return (
-    <button onClick={handleClick} style={{ margin: '0.5rem' }}>
+    <button
+      type='button'
+      onClick={handleClick}
+      className='control control--button'
+    >
       {label || id}
     </button>
   );
