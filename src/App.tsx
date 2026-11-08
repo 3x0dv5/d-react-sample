@@ -12,6 +12,7 @@ import DropdownComponent from './components/DropdownComponent';
 import TextboxComponent from './components/TextboxComponent';
 import pageConfig from './config/pageConfig.json';
 import { ComponentConfig, ComponentType, PageConfig } from './config/types';
+import ConfigEditor from './ConfigEditor';
 import { Theme, ThemeContext } from './themeContext';
 
 // Cast the imported JSON to the PageConfig TS type for better type safety
@@ -40,6 +41,9 @@ const getInitialTheme = (): Theme => {
 };
 
 const App: React.FC = () => {
+  if (typeof window !== 'undefined' && window.location.pathname === '/editor') {
+    return <ConfigEditor />;
+  }
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
 
   const toggleTheme = () => {

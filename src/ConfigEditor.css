@@ -1,0 +1,29 @@
+.config-editor {
+  display: flex;
+  height: 100vh;
+}
+
+.config-editor__sidebar {
+  width: 150px;
+  border-right: 1px solid #ddd;
+  padding: 10px;
+}
+
+.dndnode {
+  padding: 8px;
+  margin-bottom: 5px;
+  border: 1px solid #999;
+  border-radius: 3px;
+  cursor: grab;
+}
+
+.config-editor__canvas {
+  flex: 1;
+}
+
+.config-editor__output {
+  width: 300px;
+  border-left: 1px solid #ddd;
+  padding: 10px;
+  overflow: auto;
+}
