@@ -26,12 +26,12 @@ const CalendarComponent: React.FC<Props> = ({ id }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newVal = e.target.value;
     setValue(newVal);
-    
+
     // Pass the new value directly to avoid race conditions with state updates
     const triggerContext = {
       [id]: {
-        value: newVal
-      }
+        value: newVal,
+      },
     };
     executeTrigger(`${id}.onChange`, interactionConfig, triggerContext);
   };
@@ -41,7 +41,7 @@ const CalendarComponent: React.FC<Props> = ({ id }) => {
       type='date'
       value={value || ''}
       onChange={handleChange}
-      style={{ margin: '0.5rem' }}
+      className='control control--input'
     />
   );
 };

@@ -11,7 +11,9 @@ interface Props {
 
 const TextboxComponent: React.FC<Props> = ({ id, placeholder }) => {
   const [value, setValue] = useRecoilState<string>(componentStateFamily(id));
-  const [text, setText] = useRecoilState(componentPropertyFamily({ id, property: 'text' }));
+  const [text, setText] = useRecoilState(
+    componentPropertyFamily({ id, property: 'text' }),
+  );
 
   useEffect(() => {
     // Allow external rules to set this textbox's value
@@ -35,24 +37,24 @@ const TextboxComponent: React.FC<Props> = ({ id, placeholder }) => {
     setValue(newVal); // Update main value for backward compatibility
     setText(newVal); // Update text property for property-based bindings
     console.debug(`[textbox ${id}] firing trigger`, `${id}.onChange`);
-    
+
     // Pass the new values directly to avoid race conditions with state updates
     const triggerContext = {
       [id]: {
         value: newVal,
-        text: newVal
-      }
+        text: newVal,
+      },
     };
     executeTrigger(`${id}.onChange`, interactionConfig, triggerContext);
   };
 
   return (
     <input
-      type="text"
+      type='text'
       value={value || ''}
       placeholder={placeholder}
       onChange={handleChange}
-      style={{ margin: '0.5rem' }}
+      className='control control--input'
     />
   );
 };
